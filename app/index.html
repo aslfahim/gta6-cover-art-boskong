@@ -3,20 +3,94 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cover Snap</title>
+<title>Neon Boulevard — GTA-Style Cover Maker</title>
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 <main class="app">
-  <section class="controls">
-    <h1>Cover Snap</h1>
-    <p>A photo and a caption, made into a square cover.</p>
-    <label>Photo <input id="photo" type="file" accept="image/*"></label>
-    <label>Caption <input id="caption" type="text" maxlength="40" value="Sunset Heist"></label>
-    <button id="export" type="button">Export PNG 1080 x 1080</button>
+  <section class="controls" aria-label="Cover editor">
+    <header>
+      <h1>Neon Boulevard</h1>
+      <p>Your photo, split across three neon panels, under chrome lettering. Pick a photo per panel, drag to reframe, then export a PNG.</p>
+    </header>
+
+    <fieldset class="group">
+      <legend>Post size</legend>
+      <div class="sizes">
+        <button type="button" data-size="square" class="active">1080 × 1080</button>
+        <button type="button" data-size="portrait">1080 × 1350</button>
+        <button type="button" data-size="wide">1920 × 1080</button>
+      </div>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>Photos — click a panel to select it, drag the cover to pan</legend>
+      <div class="panel-row selected" data-panel="0">
+        <button type="button" class="pick">Hero</button>
+        <input type="file" accept="image/*" aria-label="Hero panel photo">
+        <button type="button" class="reset-crop">Reset crop</button>
+      </div>
+      <div class="panel-row" data-panel="1">
+        <button type="button" class="pick">Top right</button>
+        <input type="file" accept="image/*" aria-label="Top right panel photo">
+        <button type="button" class="reset-crop">Reset crop</button>
+      </div>
+      <div class="panel-row" data-panel="2">
+        <button type="button" class="pick">Bottom right</button>
+        <input type="file" accept="image/*" aria-label="Bottom right panel photo">
+        <button type="button" class="reset-crop">Reset crop</button>
+      </div>
+      <div class="fill-all">
+        <input id="fill-all-file" type="file" accept="image/*" aria-label="Photo to fill all panels">
+        <button id="fill-all" type="button">Fill all panels</button>
+      </div>
+      <p class="hint">Tip: drop an image straight onto the cover — one file fills the panel under it, several fill all three.</p>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>Selected panel</legend>
+      <p id="panel-label" class="panel-label">Hero panel — no photo yet</p>
+      <label>Zoom <span id="zoom-value">100%</span>
+        <input id="zoom" type="range" min="1" max="2.5" step="0.05" value="1">
+      </label>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>Caption</legend>
+      <label>Caption
+        <input id="caption" type="text" maxlength="40" value="Neon Boulevard">
+      </label>
+      <label>Tagline
+        <input id="tagline" type="text" maxlength="60" value="A night on the boulevard">
+      </label>
+      <label>Caption size <span id="caption-size-value">105%</span>
+        <input id="caption-size" type="range" min="60" max="160" step="5" value="105">
+      </label>
+      <div class="swatches" aria-label="Glow colour">
+        <button type="button" data-glow="#ff2e88" class="swatch active" style="--c:#ff2e88" aria-label="Pink glow"></button>
+        <button type="button" data-glow="#00e5ff" class="swatch" style="--c:#00e5ff" aria-label="Cyan glow"></button>
+        <button type="button" data-glow="#ffc93c" class="swatch" style="--c:#ffc93c" aria-label="Gold glow"></button>
+        <button type="button" data-glow="#a06bff" class="swatch" style="--c:#a06bff" aria-label="Violet glow"></button>
+      </div>
+      <label>Glow <span id="glow-value">80%</span>
+        <input id="glow" type="range" min="0" max="100" step="5" value="80">
+      </label>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>Export PNG</legend>
+      <div class="exports">
+        <button type="button" data-export="square">Square 1080²</button>
+        <button type="button" data-export="portrait">Portrait 1080×1350</button>
+        <button type="button" data-export="wide">Wide 1920×1080</button>
+      </div>
+    </fieldset>
     <p id="status" role="status"></p>
   </section>
-  <canvas id="cover" width="1080" height="1080" aria-label="The cover"></canvas>
+  <section class="stage">
+    <canvas id="cover" width="1080" height="1080" aria-label="Live cover preview"></canvas>
+    <p class="stage-hint">Live preview — drag inside a panel to pan its photo.</p>
+  </section>
 </main>
 <script type="module" src="./src/main.js"></script>
 </body>
